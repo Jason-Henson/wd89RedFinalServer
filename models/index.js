@@ -1,7 +1,7 @@
 const User = require("./user");
 const Family = require("./family");
-const Appointment = require("./appointment")
-const Meds = require("./meds")
+const Appointment = require("./appointment");
+const Meds = require("./meds");
 
 // Setup Associations
 User.hasMany(Appointment);
@@ -11,7 +11,7 @@ User.hasMany(Meds);
 Meds.belongsTo(User);
 
 User.hasMany(Family);
-Family.belongsTo(User)
+Family.belongsTo(User);
 
 module.exports = {
   User,

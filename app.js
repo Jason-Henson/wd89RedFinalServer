@@ -16,7 +16,7 @@ app.use(middlewares.CORS)
 app.use("/user", controllers.User);
 app.use("/appointment", controllers.Appointment);
 app.use("/family", controllers.Family);
-// app.use("/meds", controllers.meds); 
+app.use("/meds", controllers.Meds); 
 
 const resetDatabase = {force:true}
 db.authenticate()

@@ -1,29 +1,17 @@
-const{ Router } = require("express");
-const { Meds } = require("../models/meds");
+const express = require("express");
+const router = express.Router();
+const { Meds } = require("../models");
 const validateSession = require("../middleware/validate-session");
-
-const router = Router();
-
-/****************
- * Family Test
- ****************/
-
-router.get("/test" , async function (req, res) {
-    try{
-        req.status(200).json("Meds controller test successful")
-    }catch(e){
-        res.status(500).json({message: e.message})
-    }
-});
+const { restore } = require("../models/user");
 
 /****************
  * Family Get All
  ****************/
 
-router.get("/all" , async function (req, res) {
+router.get("/all/" ,validateSession, async function (req, res) {
     try{
-        Family.findAll( { where: {medId: req.user.id} } )    
-        .then((med) => res.status(200).json(med))
+        let medsAll = await Meds.findAll({where: {userId: req.user.id}})    
+        res.status(200).json(medsAll)
     }catch(e){
         res.status(500).json({message: e.message})
     }
@@ -33,17 +21,18 @@ router.get("/all" , async function (req, res) {
  * Family Add
  ****************/
 
-router.post("/add" , async function (req, res) {
+router.post("/add/" ,validateSession, async function (req, res) {
     try{
-        const medAdd = {
-            medName: body.req.meds.name, 
-            medScript: body.req.meds.script,
-            medDesc: body.req.meds.desc,
-            medActive: body.req.meds.medActive,
-            medNotes: body.req.meds.notes,
+        let medAdd = {
+            medName: req.body.meds.medName, 
+            medScript: req.body.meds.medScript,
+            medDesc: req.body.meds.medDesc,
+            medActive: req.body.meds.medActive,
+            medNotes: req.body.meds.medNotes,
+            userId: req.user.id,
         }
         Meds.create(medAdd)
-        .then((med) => res.status(200).json(med))
+        res.status(200).json(medAdd)
     }catch(e){
         res.status(500).json({message: e.message})
     }
@@ -53,17 +42,19 @@ router.post("/add" , async function (req, res) {
  * Family Update
  ****************/
 
-router.post("/:id" , async function (req, res) {
+router.put("/:id" ,validateSession, async function (req, res) {
     try{
-        const medUpdate = {
-            medName: body.req.meds.name, 
-            medScript: body.req.meds.script,
-            medDesc: body.req.meds.desc,
-            medActive: body.req.meds.medActive,
-            medNotes: body.req.meds.notes,
+        let medUpdate = {
+            medName: req.body.meds.medName, 
+            medScript: req.body.meds.medScript,
+            medDesc: req.body.meds.medDesc,
+            medActive: req.body.meds.medActive,
+            medNotes: req.body.meds.medNotes,
+            userId: req.user.id,
         }
         const query = { where: { id: req.params.id } };
-        Meds.update(medUpdate)
+        Meds.update(medUpdate, query)
+        res.status(200).json(medUpdate)
     }catch(e){
         res.status(500).json({message: e.message})
     }
@@ -73,9 +64,10 @@ router.post("/:id" , async function (req, res) {
  * Family Delete
  ****************/
 
-router.delete("/:id" , async function (req, res) {
+router.delete("/:id" ,validateSession, async function (req, res) {
     try{
-        const query = { where: { id: req.params.id, owner_id: req.meds.id}}
+        const query = await Meds.destroy({ where: { id: req.params.id, userId: req.user.id}})
+        res.status(200).json(query)
     }catch(e){
         res.status(500).json({message: e.message})
     }
