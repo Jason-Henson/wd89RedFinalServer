@@ -14,7 +14,7 @@ const controllers = require("./controllers");
 app.use(Express.json());
 app.use(middlewares.CORS)
 app.use("/user", controllers.User);
-// app.use("/appointment", controllers.Appointment);
+app.use("/appointment", controllers.Appointment);
 app.use("/family", controllers.Family);
 // app.use("/meds", controllers.meds); 
 

@@ -1,49 +1,42 @@
-const{ Router } = require("express");
-const { Appointment } = require("../models/appointment");
+const express = require("express");
+const router = express.Router();
+const { Appointment } = require("../models");
 const validateSession = require("../middleware/validate-session");
-
-const router = Router();
-
-/*******************
- * Appointment Test
- *******************/
-router.get("/test" , async function (req, res) {
-    try{
-        res.status(200).json("Appointment controller is working")
-    }catch(e){
-        res.status(500).json({message: e.message})
-    }
-});
 
 /*******************
  * Appointment Get All
  *******************/
 
-router.get("/all" , async function (req, res) {
+router.get("/all/" ,validateSession, async(req, res) => {
     try{
-        Appointment.findAll( { where: {owner_id: req.user.id}})
-        Appointment.findAll( { where: {appId: req.user.id }})
-        await((apt) => res.status(200).json(apt))
+        let appAll = await Appointment.findAll({where: {userId: req.user.id}})
+        res.status(200).json(appAll)      
     }catch(e){
         res.status(500).json({message: e.message})
     }
 });
 
 /*******************
- * Appointment Create
+ * Appointment Add
  *******************/
 
-router.post("/add" , async function (req, res) {
+router.post("/add" ,validateSession, async function (req, res) {
     try{
-        const addApt = {
-            appDate: req.body.appointment.date,
-            appTime: req.body.appointment.time, 
-            appLoc: req.body.appointment.location,
-            appDoc: req.body.appointment.doctor,
-            appNotes: req.body.appointment.notes,
+        let appAdd = await {
+            appDate: req.body.appointment.appDate,
+            appTime: req.body.appointment.appTime, 
+            appLoc: req.body.appointment.appLoc,
+            appDoc: req.body.appointment.appDoc,
+            appNotes: req.body.appointment.appNotes,
+            userId: req.user.id,
+        };
+
+        appAddResult(appAdd)
+        function appAddResult() {
+            Appointment.create(appAdd)
+            res.status(200).json(appAdd)
         }
-        Appointment.create(apt)
-        .then((apt) => res.status(200).json(apt))
+        
     }catch(e){
         res.status(500).json({message: e.message})
     }
@@ -53,19 +46,22 @@ router.post("/add" , async function (req, res) {
  * Appointment Update
  *******************/
 
-router.post("/:id" , async function (req, res) {
+router.put("/:id" ,validateSession, async function (req, res) {
     try{
-        const updateApt = {
-            appDate: req.body.appointment.date,
-            appTime: req.body.appointment.time, 
-            appLoc: req.body.appointment.location,
-            appDoc: req.body.appointment.doctor,
-            appNotes: req.body.appointment.notes,
+        let appUpdate = {
+            appDate: req.body.appointment.appDate,
+            appTime: req.body.appointment.appTime, 
+            appLoc: req.body.appointment.appLoc,
+            appDoc: req.body.appointment.appDoc,
+            appNotes: req.body.appointment.appNotes,
         }
-        const query = { where: { id: req.params.id } };
+        let query = { where: { id: req.params.id } };
 
-        Appointment.update(apt, query)
-        .then((apt) => res.status(200).json(apt))
+        appUpdateResult(appUpdate)
+        function appUpdateResult() {
+            Appointment.update(appUpdate, query)
+            res.status(200).json(appUpdate)
+        }         
     }catch(e){
         res.status(500).json({message: e.message})
     }
@@ -75,13 +71,13 @@ router.post("/:id" , async function (req, res) {
  * Appointment Delete
  *******************/
 
-router.delete("/:id" , async function (req, res) {
+router.delete("/:id" ,validateSession, async function (req, res) {
     try{
-        const query = { where: { id: req.params.id, owner_id: req.appointment.id}}
+        let query = await Appointment.destroy({ where: { id: req.params.id, userId: req.user.id}})
+        res.status(200).json(query)
     }catch(e){
         res.status(500).json({message: e.message})
     }
 });
 
-module.exports = Appointment;
-
+module.exports = router;
