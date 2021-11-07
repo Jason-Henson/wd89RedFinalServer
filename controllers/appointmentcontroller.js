@@ -23,6 +23,7 @@ router.get("/all/" ,validateSession, async(req, res) => {
 router.post("/add" ,validateSession, async function (req, res) {
     try{
         let appAdd = await {
+            appFor: req.body.appointment.appFor,
             appDate: req.body.appointment.appDate,
             appTime: req.body.appointment.appTime, 
             appLoc: req.body.appointment.appLoc,
@@ -49,6 +50,7 @@ router.post("/add" ,validateSession, async function (req, res) {
 router.put("/:id" ,validateSession, async function (req, res) {
     try{
         let appUpdate = {
+            appFor: req.body.appointment.appFor,
             appDate: req.body.appointment.appDate,
             appTime: req.body.appointment.appTime, 
             appLoc: req.body.appointment.appLoc,

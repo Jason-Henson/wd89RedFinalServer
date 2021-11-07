@@ -28,12 +28,8 @@ router.post("/add" ,validateSession, async function (req, res) {
             famAllergic: req.body.family.famAllergic,
             userId: req.user.id,
         };
-
-        famAddResult(famAdd)
-            function famAddResult() {
-            Family.create(famAdd)
-            res.status(200).json(famAdd)
-            }
+        let result = await Family.create(famAdd)
+            return res.status(200).json(result)
     }catch(e){
         res.status(500).json({message: e.message})
     }

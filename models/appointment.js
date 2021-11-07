@@ -2,6 +2,11 @@ const { DataTypes } = require("sequelize");
 const db = require("../db");
 
 const Appointment = db.define("appointment", {
+    appFor: {
+        type: DataTypes.STRING,
+        allowNull: false, 
+    },
+
     appDate: {
         type: DataTypes.DATE, 
         allowNull: false,

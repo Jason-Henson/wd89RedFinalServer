@@ -3,7 +3,7 @@ const Family = require("./family");
 const Appointment = require("./appointment");
 const Meds = require("./meds");
 
-// Setup Associations
+// Setup Associations 
 User.hasMany(Appointment);
 Appointment.belongsTo(User);
 
