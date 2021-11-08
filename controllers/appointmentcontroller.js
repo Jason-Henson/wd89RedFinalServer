@@ -58,12 +58,8 @@ router.put("/:id" ,validateSession, async function (req, res) {
             appNotes: req.body.appointment.appNotes,
         }
         let query = { where: { id: req.params.id } };
-
-        appUpdateResult(appUpdate)
-        function appUpdateResult() {
-            Appointment.update(appUpdate, query)
-            res.status(200).json(appUpdate)
-        }         
+        Appointment.update(appUpdate, query)
+            res.status(200).json(appUpdate)       
     }catch(e){
         res.status(500).json({message: e.message})
     }
