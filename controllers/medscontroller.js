@@ -5,7 +5,7 @@ const validateSession = require("../middleware/validate-session");
 const { restore } = require("../models/user");
 
 /****************
- * Family Get All
+ * meds Get All
  ****************/
 
 router.get("/all/" ,validateSession, async function (req, res) {
@@ -18,12 +18,13 @@ router.get("/all/" ,validateSession, async function (req, res) {
 });
 
 /****************
- * Family Add
+ * meds Add
  ****************/
 
 router.post("/add/" ,validateSession, async function (req, res) {
     try{
         let medAdd = {
+            medFor: req.body.meds.medFor,
             medName: req.body.meds.medName, 
             medScript: req.body.meds.medScript,
             medDesc: req.body.meds.medDesc,
@@ -39,7 +40,7 @@ router.post("/add/" ,validateSession, async function (req, res) {
 });
 
 /****************
- * Family Update
+ * meds Update
  ****************/
 
 router.put("/:id" ,validateSession, async function (req, res) {
@@ -61,7 +62,7 @@ router.put("/:id" ,validateSession, async function (req, res) {
 });
 
 /****************
- * Family Delete
+ * Meds Delete
  ****************/
 
 router.delete("/:id" ,validateSession, async function (req, res) {
