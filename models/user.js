@@ -13,6 +13,12 @@ const User = db.define("user", {
     allowNull: false,
     unique: true,
   },
+
+  role: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    unique: false,
+  },
   
   passwordhash: {
     type: DataTypes.STRING,

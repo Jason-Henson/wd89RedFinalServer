@@ -16,6 +16,7 @@ router.post("/create", async function (req, res) {
     let user = await User.create({
       userName: req.body.user.userName,
       email: req.body.user.email,
+      role: req.body.user.role,
       passwordhash: bcrypt.hashSync(req.body.user.passwordhash, 13),
     })
     createSuccess(user)

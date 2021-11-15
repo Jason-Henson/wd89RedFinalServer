@@ -5,7 +5,7 @@ const Family = db.define("family", {
     famMember: {
         type: DataTypes.STRING(25),
         allowNull: false,
-        unique: true,
+        unique: false,
     },
 
     famAge: {

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Appointment } = require("../models");
+const { User } = require("../models")
 const validateSession = require("../middleware/validate-session");
 
 /*******************
@@ -8,6 +9,14 @@ const validateSession = require("../middleware/validate-session");
  *******************/
 
 router.get("/all/" ,validateSession, async(req, res) => {
+    let query;
+
+    if(req.user.role){
+        query = ""
+    } else {
+        query = "{where: {userId: req.user.id}}"
+    }
+
     try{
         let appAll = await Appointment.findAll({where: {userId: req.user.id}})
         res.status(200).json(appAll)      
