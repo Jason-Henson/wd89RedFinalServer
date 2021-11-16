@@ -11,7 +11,7 @@ const validateSession = require("../middleware/validate-session");
 router.get("/all/" ,validateSession, async(req, res) => {
     let query;
 
-    if(req.user.role){
+    if(req.user.role === true){
         query = ""
     } else {
         query = "{where: {userId: req.user.id}}"
